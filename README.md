@@ -102,9 +102,8 @@ POST /auth/login
 After starting the application:
 
 ```
-http://localhost:8080/swagger-ui/index.html
+https://e-commerce-backend-production-2580.up.railway.app/swagger-ui/index.html
 ```
-
 ---
 
 ## ▶ Running the Project
