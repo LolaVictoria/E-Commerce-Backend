@@ -1,14 +1,23 @@
+/**
+ * Handles shopping cart operations.
+ *
+ * Responsible for:
+ * - Adding items
+ * - Updating quantities
+ * - Removing items
+ * - Clearing the cart
+ * - Returning the current user's cart
+ */
+
+
 package com.alabacommerce.cart;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import com.alabacommerce.dto.CartItemRequest;
 import com.alabacommerce.dto.CartItemResponse;
 import com.alabacommerce.dto.CartResponse;
@@ -19,7 +28,7 @@ import com.alabacommerce.entity.User;
 import com.alabacommerce.exception.ResourceNotFoundException;
 import com.alabacommerce.mapper.ProductMapper;
 import com.alabacommerce.product.ProductRepository;
-import com.alabacommerce.repository.UserRepository;
+import com.alabacommerce.service.CurrentUserService;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -27,21 +36,20 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
     private final ProductMapper productMapper;
-    
+    private final CurrentUserService currentUserService;
     public CartServiceImpl(
         CartRepository cartRepository,
         CartItemRepository cartItemRepository,
         ProductRepository productRepository,
-        UserRepository userRepository,
-        ProductMapper productMapper) {
+        ProductMapper productMapper,
+        CurrentUserService currentUserService) {
 
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
-        this.userRepository = userRepository;
         this.productMapper = productMapper;
+        this.currentUserService = currentUserService;
     }
 
     private CartResponse mapCartResponse(Cart cart) {
@@ -82,16 +90,6 @@ public class CartServiceImpl implements CartService {
         return response;
     }
     
-    private User getCurrentUser() {
-
-        String email = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
-
-        User user = userRepository.findByEmail(email);
-
-        return user;
-    }
 
     @Override
     public CartResponse addItem(CartItemRequest request) {
@@ -102,10 +100,8 @@ public class CartServiceImpl implements CartService {
         //step 5 - Does cart already contain item e.g Laptop?
         //step 6-  No - Create CartItem
         //step 7 - return updated cart
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
     
-        Long productId = request.getProductId();
-
         Product product = productRepository.findById(request.getProductId())
             .orElseThrow(() ->
                     new ResourceNotFoundException("Product not found"));
@@ -154,7 +150,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponse getCart() {
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
@@ -168,7 +164,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartResponse updateItem(Long cartItemId, CartItemRequest request) {
 
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() ->
@@ -189,7 +185,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void removeItem(Long cartItemId) {
 
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() ->
@@ -205,7 +201,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void clearCart() {
 
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() ->

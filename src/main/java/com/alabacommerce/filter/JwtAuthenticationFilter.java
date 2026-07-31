@@ -1,3 +1,12 @@
+/**
+ * JWT authentication filter.
+ *
+ * Intercepts incoming requests,
+ * validates JWT tokens,
+ * and authenticates users before
+ * protected endpoints are accessed.
+ */
+
 package com.alabacommerce.filter;
 
 import java.io.IOException;

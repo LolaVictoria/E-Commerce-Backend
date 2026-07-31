@@ -1,3 +1,10 @@
+/**
+ * Global exception handler.
+ *
+ * Converts application exceptions into
+ * meaningful HTTP responses.
+ */
+
 package com.alabacommerce.exception;
 
 import java.util.HashMap;

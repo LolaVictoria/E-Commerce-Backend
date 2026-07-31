@@ -1,3 +1,8 @@
+/**
+ * Generates and validates JWT access tokens.
+ */
+
+
 package com.alabacommerce.service;
 
 import java.security.Key;

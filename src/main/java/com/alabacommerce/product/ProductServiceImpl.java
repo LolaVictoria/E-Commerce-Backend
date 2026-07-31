@@ -1,3 +1,14 @@
+/**
+ * Contains the business logic for product management.
+ *
+ * Responsible for:
+ * - Creating products
+ * - Updating products
+ * - Deleting products
+ * - Searching products
+ * - Validating product ownership
+ */
+
 package com.alabacommerce.product;
 import java.time.LocalDateTime;
 
@@ -6,8 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.alabacommerce.dto.ProductRequest;
@@ -16,34 +25,34 @@ import com.alabacommerce.entity.Category;
 import com.alabacommerce.entity.Product;
 import com.alabacommerce.entity.User;
 import com.alabacommerce.exception.ResourceNotFoundException;
-import com.alabacommerce.repository.UserRepository;
+import com.alabacommerce.service.CurrentUserService;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
-    
+    private final CurrentUserService currentUserService;
     
     public ProductServiceImpl(
         ProductRepository productRepository,
-        UserRepository userRepository) {
+        CurrentUserService currentUserService) {
 
         this.productRepository = productRepository;
-        this.userRepository = userRepository;
+        this.currentUserService = currentUserService;
     }
+
+    private void validateOwner(Product product, User user){
+        if(!product.getSeller().getId().equals(user.getId())){
+            throw new AccessDeniedException("You are not allowed...");
+        }
+    }
+    
 
 
     @Override
     public ProductResponse createProduct(ProductRequest request) {
-        
-
-        Authentication authentication =
-        SecurityContextHolder.getContext().getAuthentication();
-
-        String email = authentication.getName();
 
         User currentUser =
-            userRepository.findByEmail(email);
+            currentUserService.getCurrentUser();
        
         Product product = mapToProduct(request);
 
@@ -152,14 +161,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<ProductResponse> getAllSellersProducts(Category category, int page, int size, String sort, String keyword) {
 
-        Authentication authentication =
-    SecurityContextHolder.getContext().getAuthentication();
 
-    String email = authentication.getName();
-
-
-    User currentUser =
-        userRepository.findByEmail(email);
+    User currentUser = currentUserService.getCurrentUser();
 
         
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
@@ -174,17 +177,10 @@ public class ProductServiceImpl implements ProductService {
         Product existingProduct = productRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        Authentication authentication =
-            SecurityContextHolder.getContext().getAuthentication();
 
-        String email = authentication.getName();
+        User currentUser = currentUserService.getCurrentUser();
 
-        User currentUser =
-                userRepository.findByEmail(email);
-
-        if (!existingProduct.getSeller().getId().equals(currentUser.getId())) {
-           throw new AccessDeniedException("You are not allowed to modify this product.");
-        }
+        validateOwner(existingProduct, currentUser);
 
         existingProduct.setName(request.getName());
         existingProduct.setDescription(request.getDescription());
@@ -205,18 +201,9 @@ public class ProductServiceImpl implements ProductService {
         Product existingProduct = productRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        Authentication authentication =
-        SecurityContextHolder.getContext().getAuthentication();
 
-        String email = authentication.getName();
-
-
-        User currentUser =
-                userRepository.findByEmail(email);
-
-        if (!existingProduct.getSeller().getId().equals(currentUser.getId())) {
-            throw new AccessDeniedException("You are not allowed to delete this product.");
-        }
+        User currentUser = currentUserService.getCurrentUser();
+        validateOwner(existingProduct, currentUser);
 
         
         productRepository.deleteById(id);   

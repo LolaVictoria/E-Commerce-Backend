@@ -1,8 +1,20 @@
+/**
+ * Handles product-related REST API endpoints.
+ *
+ * Features:
+ * - Create products
+ * - Retrieve products
+ * - Update products
+ * - Delete products
+ * - Search and filter products
+ *
+ * Base URL: /products
+ */
+
 package com.alabacommerce.product;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.alabacommerce.dto.ProductRequest;
@@ -14,13 +26,10 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-
-    private final PasswordEncoder passwordEncoder;
     private final ProductService productService;
 
-    public ProductController(ProductService productService, PasswordEncoder passwordEncoder) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping

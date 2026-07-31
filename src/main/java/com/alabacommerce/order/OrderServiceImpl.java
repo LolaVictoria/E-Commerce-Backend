@@ -1,10 +1,18 @@
+/**
+ * Handles customer checkout and order management.
+ *
+ * Responsible for:
+ * - Checkout
+ * - Viewing customer orders
+ * - Viewing seller orders
+ * - Updating order status
+ */
+
 package com.alabacommerce.order;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.alabacommerce.cart.CartRepository;
@@ -20,40 +28,41 @@ import com.alabacommerce.exception.ResourceNotFoundException;
 import com.alabacommerce.mapper.OrderMapper;
 import com.alabacommerce.repository.OrderRepository;
 import com.alabacommerce.repository.UserRepository;
+import com.alabacommerce.service.CurrentUserService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
-    private final UserRepository userRepository;
     private final OrderMapper orderMapper;
+    private final CurrentUserService currentUserService;
 
     public OrderServiceImpl(
             OrderRepository orderRepository,
             CartRepository cartRepository,
             UserRepository userRepository,
-            OrderMapper orderMapper) {
+            OrderMapper orderMapper,
+            CurrentUserService currentUserService) {
 
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
-        this.userRepository = userRepository;
         this.orderMapper = orderMapper;
+        this.currentUserService = currentUserService;
     }
 
-    private User getCurrentUser() {
-
-        String email = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
-
-        return userRepository.findByEmail(email);
+    private Order findOrder(Long orderId) {
+       return orderRepository.findById(orderId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Order not found"));
     }
+
+    
 
     @Override
     public OrderResponse checkout() {
 
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() ->
@@ -104,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> getOrders() {
 
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
         return orderRepository.findByUser(user)
                 .stream()
@@ -115,11 +124,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse getOrder(Long orderId) {
 
-        User user = getCurrentUser();
+        User user = currentUserService.getCurrentUser();
 
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Order not found"));
+        Order order = findOrder(orderId);
 
         if (!order.getUser().getId().equals(user.getId())) {
             throw new RuntimeException("Access denied");
@@ -131,7 +138,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> getSellerOrders() {
 
-        User seller = getCurrentUser();
+        User seller = currentUserService.getCurrentUser();
 
         return orderRepository
                 .findDistinctByItems_Product_Seller(seller)
@@ -145,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
             Long orderId,
             UpdateStatusRequest request) {
 
-        User seller = getCurrentUser();
+        User seller = currentUserService.getCurrentUser();
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() ->

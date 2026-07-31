@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.alabacommerce.dto.OrderResponse;
 
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/orders")
@@ -18,6 +17,8 @@ public class OrderController {
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
+
+    
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

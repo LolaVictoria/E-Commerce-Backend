@@ -1,3 +1,10 @@
+/**
+ * Converts Product entities into ProductResponse DTOs.
+ *
+ * Keeps controllers and services free from
+ * repetitive object conversion logic.
+ */
+
 package com.alabacommerce.mapper;
 
 import org.springframework.stereotype.Component;

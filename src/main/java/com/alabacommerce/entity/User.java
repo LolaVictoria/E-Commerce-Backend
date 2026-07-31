@@ -1,3 +1,13 @@
+
+/**
+ * Represents an application user.
+ *
+ * Users can register as either:
+ * - USER
+ * - SELLER
+ * - ADMIN
+ */
+
 package com.alabacommerce.entity;
 
 import jakarta.persistence.*;

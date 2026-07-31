@@ -1,3 +1,10 @@
+/**
+ * Represents a product listed by a seller.
+ *
+ * Each product belongs to exactly one seller
+ * and may appear in multiple carts and orders.
+ */
+
 package com.alabacommerce.entity;
 
 import java.math.BigDecimal;

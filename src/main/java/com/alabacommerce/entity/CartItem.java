@@ -2,8 +2,6 @@ package com.alabacommerce.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
