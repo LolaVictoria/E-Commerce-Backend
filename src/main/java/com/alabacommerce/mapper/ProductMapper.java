@@ -18,7 +18,6 @@ public class ProductMapper {
     public ProductResponse mapToResponse(Product product) {
 
         ProductResponse response = new ProductResponse();
-
         response.setId(product.getId());
         response.setName(product.getName());
         response.setDescription(product.getDescription());
@@ -26,7 +25,7 @@ public class ProductMapper {
         response.setStock(product.getStock());
         response.setCategory(product.getCategory());
         response.setImageUrl(product.getImageUrl());
-        response.setSellerName(product.getSeller().getName());
+        response.setSellerName(product.getSeller().getFirstName() + " " + product.getSeller().getLastName());
 
         return response;
     }

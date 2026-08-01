@@ -91,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
         response.setCategory(product.getCategory());
         response.setImageUrl(product.getImageUrl());
         if (product.getSeller() != null) {
-            response.setSellerName(product.getSeller().getName());
+            response.setSellerName(product.getSeller().getFirstName() + " " + product.getSeller().getLastName());
         } else {
             response.setSellerName("No Seller");
         }
