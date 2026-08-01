@@ -3,13 +3,15 @@ package com.alabacommerce.dto;
 public class LoginResponse {
 
     private String token;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
     private String role;
 
-    public LoginResponse(String token, String name, String email, String role) {
+    public LoginResponse(String token, String firstName, String lastName, String email, String role) {
         this.token = token;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.role = role;
     }
@@ -18,8 +20,12 @@ public class LoginResponse {
         return token;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public String getEmail() {
