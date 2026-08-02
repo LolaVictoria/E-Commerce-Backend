@@ -96,6 +96,14 @@ POST /auth/login
 | DELETE | `/cart` |
 
 ---
+## 🌐 Live Website
+
+The frontend application is live at:
+
+🔗 **https://alaba-market.vercel.app**
+
+https://alaba-market.vercel.app
+---
 
 ## 📖 Swagger Documentation
 
