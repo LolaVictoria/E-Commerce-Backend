@@ -129,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = findOrder(orderId);
 
         if (!order.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Access denied");
+            throw new org.springframework.security.access.AccessDeniedException("Access denied");
         }
 
         return orderMapper.mapToResponse(order);
@@ -167,7 +167,7 @@ public class OrderServiceImpl implements OrderService {
                                 .equals(seller.getId()));
 
         if (!ownsProduct) {
-            throw new RuntimeException("Access denied");
+            throw new org.springframework.security.access.AccessDeniedException("Access denied");
         }
 
         order.setStatus(request.getStatus());

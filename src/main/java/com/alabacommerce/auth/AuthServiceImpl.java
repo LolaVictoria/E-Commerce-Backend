@@ -11,6 +11,7 @@ import com.alabacommerce.dto.RegisterRequest;
 import com.alabacommerce.dto.UserResponse;
 import com.alabacommerce.entity.Role;
 import com.alabacommerce.entity.User;
+import com.alabacommerce.exception.ResourceAlreadyExistsException;
 import com.alabacommerce.repository.UserRepository;
 import com.alabacommerce.service.JwtService;
 
@@ -35,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     public UserResponse register(RegisterRequest request) {
 
         if (userRepository.findByEmail(request.getEmail()) != null) {
-            throw new RuntimeException("Email already exists");
+            throw new ResourceAlreadyExistsException("Email already exists");
         }
 
         User user = new User();

@@ -10,6 +10,7 @@
  */
 
 package com.alabacommerce.product;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
@@ -25,19 +26,23 @@ import com.alabacommerce.entity.Category;
 import com.alabacommerce.entity.Product;
 import com.alabacommerce.entity.User;
 import com.alabacommerce.exception.ResourceNotFoundException;
+import com.alabacommerce.service.CloudinaryService;
 import com.alabacommerce.service.CurrentUserService;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CurrentUserService currentUserService;
+    private final CloudinaryService cloudinaryService;
     
     public ProductServiceImpl(
         ProductRepository productRepository,
-        CurrentUserService currentUserService) {
-
+        CurrentUserService currentUserService,
+        CloudinaryService cloudinaryService) {
+        
         this.productRepository = productRepository;
         this.currentUserService = currentUserService;
+        this.cloudinaryService = cloudinaryService;
     }
 
     private void validateOwner(Product product, User user){
@@ -55,6 +60,13 @@ public class ProductServiceImpl implements ProductService {
             currentUserService.getCurrentUser();
        
         Product product = mapToProduct(request);
+
+        try {
+            String imageUrl = cloudinaryService.uploadImage(request.getImage());
+            product.setImageUrl(imageUrl);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image", e);
+        }
 
         product.setSeller(currentUser);
         product.setCreatedAt(LocalDateTime.now());
@@ -74,8 +86,7 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
         product.setCategory(request.getCategory());
-        product.setImageUrl(request.getImageUrl());
-
+       
         return product;
     }
 
@@ -187,8 +198,12 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setPrice(request.getPrice());
         existingProduct.setStock(request.getStock());
         existingProduct.setCategory(request.getCategory());
-        existingProduct.setImageUrl(request.getImageUrl());
-
+        try {
+            String imageUrl = cloudinaryService.uploadImage(request.getImage());
+            existingProduct.setImageUrl(imageUrl);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image", e);
+        }
         existingProduct.setUpdatedAt(LocalDateTime.now());
 
         Product updatedProduct = productRepository.save(existingProduct);

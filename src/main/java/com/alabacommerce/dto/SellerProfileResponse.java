@@ -18,6 +18,8 @@ public class SellerProfileResponse {
 
     private NigerianState state;
 
+    private String token;
+
     public SellerProfileResponse() {
     }
 
@@ -28,7 +30,8 @@ public class SellerProfileResponse {
             String phoneNumber,
             String address,
             String city,
-            NigerianState state) {
+            NigerianState state,
+            String token) {
 
         this.id = id;
         this.businessName = businessName;
@@ -37,6 +40,7 @@ public class SellerProfileResponse {
         this.address = address;
         this.city = city;
         this.state = state;
+        this.token = token;
     }
 
     public Long getId() {
@@ -93,5 +97,13 @@ public class SellerProfileResponse {
 
     public void setState(NigerianState state) {
         this.state = state;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

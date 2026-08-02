@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ProductRequest {
 
@@ -29,7 +30,7 @@ public class ProductRequest {
     private Category category;
 
     @NotBlank(message = "Image URL is required")
-    private String imageUrl;
+    private MultipartFile imageUrl;
 
     public ProductRequest() {
     }
@@ -74,11 +75,11 @@ public class ProductRequest {
         this.category = category;
     }
 
-    public String getImageUrl() {
+    public MultipartFile getImage() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImage(MultipartFile imageUrl) {
         this.imageUrl = imageUrl;
     }
 }
