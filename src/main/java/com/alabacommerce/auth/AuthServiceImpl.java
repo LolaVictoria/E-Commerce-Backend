@@ -51,7 +51,8 @@ public class AuthServiceImpl implements AuthService {
 
         return new UserResponse(
                 savedUser.getId(),
-                savedUser.getFirstName() + " " + savedUser.getLastName(),
+                savedUser.getFirstName(),
+                savedUser.getLastName(),
                 savedUser.getEmail(),
                 savedUser.getRole()
         );
@@ -70,7 +71,8 @@ public class AuthServiceImpl implements AuthService {
 
         return new LoginResponse(
                 token,
-                user.getFirstName() + " " + user.getLastName(),
+                user.getFirstName(),
+                user.getLastName(),
                 user.getEmail(),
                 user.getRole().name()
         );
