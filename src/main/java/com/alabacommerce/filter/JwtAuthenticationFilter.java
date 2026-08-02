@@ -53,7 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
+        System.out.println(request.getRequestURI());
+        System.out.println(authHeader);
         String token = authHeader.substring(7);
        
         String email = jwtService.extractEmail(token);
