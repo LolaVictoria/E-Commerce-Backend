@@ -16,7 +16,6 @@ import jakarta.validation.Valid;
 @RestController
 @Tag(name = "Seller", description = "Seller APIs")
 @RequestMapping("/seller")
-@PreAuthorize("hasRole('SELLER')")
 public class SellerController {
 
     private final OrderService orderService;
