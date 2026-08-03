@@ -2,6 +2,7 @@ package com.alabacommerce.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "seller_profiles")
@@ -11,22 +12,22 @@ public class SellerProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Business name is required")
     private String businessName;
 
-    @NotBlank
+    @NotBlank(message = "Business description is required")
     private String businessDescription;
 
-    @NotBlank
+    @NotBlank(message = "Phone number is required")
     private String phoneNumber;
 
-    @NotBlank
+    @NotBlank(message = "Address is required")
     private String address;
 
-    @NotBlank
+    @NotBlank(message = "City is required")
     private String city;
 
-    @NotBlank
+    @NotNull(message = "State is required")
     private NigerianState state;
 
     @OneToOne
