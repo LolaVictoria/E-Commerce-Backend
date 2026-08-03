@@ -117,7 +117,20 @@ public class ProductServiceImpl implements ProductService {
             String sort,
             String keyword
         ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+        Sort sorting = Sort.by("createdAt").descending();
+
+        if (sort != null && !sort.isBlank()) {
+
+            String[] parts = sort.split(",");
+
+            if (parts.length == 2 && parts[1].equalsIgnoreCase("desc")) {
+                sorting = Sort.by(parts[0]).descending();
+            } else {
+                sorting = Sort.by(parts[0]).ascending();
+            }
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sorting);
         
         if (keyword != null && !keyword.isBlank()) {
 
@@ -176,7 +189,20 @@ public class ProductServiceImpl implements ProductService {
     User currentUser = currentUserService.getCurrentUser();
 
         
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+        Sort sorting = Sort.by("createdAt").descending();
+
+        if (sort != null && !sort.isBlank()) {
+
+            String[] parts = sort.split(",");
+
+            if (parts.length == 2 && parts[1].equalsIgnoreCase("desc")) {
+                sorting = Sort.by(parts[0]).descending();
+            } else {
+                sorting = Sort.by(parts[0]).ascending();
+            }
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sorting);
         return productRepository
             .findBySeller(currentUser, pageable)
             .map(this::mapToResponse);

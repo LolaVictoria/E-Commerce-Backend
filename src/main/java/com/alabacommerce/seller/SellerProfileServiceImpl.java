@@ -31,6 +31,19 @@ public class SellerProfileServiceImpl implements SellerProfileService {
         this.jwtService = jwtService;
     }
 
+    private SellerProfileResponse buildResponse(SellerProfile profile, User user) {
+        return new SellerProfileResponse(
+                profile.getId(),
+                profile.getBusinessName(),
+                profile.getBusinessDescription(),
+                profile.getPhoneNumber(),
+                profile.getAddress(),
+                profile.getCity(),
+                profile.getState(),
+                jwtService.generateToken(user.getEmail())
+        );
+}
+
     @Override
     public boolean doesSellerProfileExistForUser(Long userId) {
         return userRepository.findById(userId)
@@ -61,16 +74,7 @@ public class SellerProfileServiceImpl implements SellerProfileService {
 
         SellerProfile savedSellerProfile = sellerProfileRepository.save(sellerProfile);
 
-        return new SellerProfileResponse(
-                savedSellerProfile.getId(),
-                savedSellerProfile.getBusinessName(),
-                savedSellerProfile.getBusinessDescription(),
-                savedSellerProfile.getPhoneNumber(),
-                savedSellerProfile.getAddress(),
-                savedSellerProfile.getCity(),
-                savedSellerProfile.getState(),
-                jwtService.generateToken(user.getEmail())
-        );
+       return buildResponse(savedSellerProfile, user);
     }
 
     @Override
@@ -82,16 +86,7 @@ public class SellerProfileServiceImpl implements SellerProfileService {
         SellerProfile sellerProfile = sellerProfileRepository.findByUser(user)
                 .orElseThrow(() -> new ResourceNotFoundException("Seller profile not found"));
 
-        return new SellerProfileResponse(
-                sellerProfile.getId(),
-                sellerProfile.getBusinessName(),
-                sellerProfile.getBusinessDescription(),
-                sellerProfile.getPhoneNumber(),
-                sellerProfile.getAddress(),
-                sellerProfile.getCity(),
-                sellerProfile.getState(),
-                jwtService.generateToken(user.getEmail())
-        );
+        return buildResponse(sellerProfile, user);
     }
 
     @Override
@@ -112,16 +107,7 @@ public class SellerProfileServiceImpl implements SellerProfileService {
 
         SellerProfile updatedSellerProfile = sellerProfileRepository.save(sellerProfile);
 
-        return new SellerProfileResponse(
-                updatedSellerProfile.getId(),
-                updatedSellerProfile.getBusinessName(),
-                updatedSellerProfile.getBusinessDescription(),
-                updatedSellerProfile.getPhoneNumber(),
-                updatedSellerProfile.getAddress(),
-                updatedSellerProfile.getCity(),
-                updatedSellerProfile.getState(),
-                jwtService.generateToken(user.getEmail())
-        );
+       return buildResponse(updatedSellerProfile, user);
     }
 
     @Override
