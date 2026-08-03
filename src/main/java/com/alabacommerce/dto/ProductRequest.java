@@ -29,7 +29,7 @@ public class ProductRequest {
     @NotNull(message = "Category is required")
     private Category category;
 
-    @NotBlank(message = "Image URL is required")
+    @NotNull(message = "Image is required")
     private MultipartFile imageUrl;
 
     public ProductRequest() {
