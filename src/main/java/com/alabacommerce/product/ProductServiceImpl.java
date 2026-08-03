@@ -10,39 +10,32 @@
  */
 
 package com.alabacommerce.product;
-import java.io.IOException;
 import java.time.LocalDateTime;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-
 import com.alabacommerce.dto.ProductRequest;
 import com.alabacommerce.dto.ProductResponse;
 import com.alabacommerce.entity.Category;
 import com.alabacommerce.entity.Product;
 import com.alabacommerce.entity.User;
 import com.alabacommerce.exception.ResourceNotFoundException;
-import com.alabacommerce.service.CloudinaryService;
 import com.alabacommerce.service.CurrentUserService;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CurrentUserService currentUserService;
-    private final CloudinaryService cloudinaryService;
     
     public ProductServiceImpl(
         ProductRepository productRepository,
-        CurrentUserService currentUserService,
-        CloudinaryService cloudinaryService) {
+        CurrentUserService currentUserService) {
         
         this.productRepository = productRepository;
         this.currentUserService = currentUserService;
-        this.cloudinaryService = cloudinaryService;
     }
 
     private void validateOwner(Product product, User user){
@@ -60,14 +53,6 @@ public class ProductServiceImpl implements ProductService {
             currentUserService.getCurrentUser();
        
         Product product = mapToProduct(request);
-
-        try {
-            String imageUrl = cloudinaryService.uploadImage(request.getImage());
-            product.setImageUrl(imageUrl);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload image", e);
-        }
-
         product.setSeller(currentUser);
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
@@ -86,6 +71,7 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
         product.setCategory(request.getCategory());
+        product.setImageUrl(request.getImageUrl());
        
         return product;
     }
@@ -184,29 +170,27 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductResponse> getAllSellersProducts(Category category, int page, int size, String sort, String keyword) {
+        User currentUser = currentUserService.getCurrentUser();
 
+            
+            Sort sorting = Sort.by("createdAt").descending();
 
-    User currentUser = currentUserService.getCurrentUser();
+            if (sort != null && !sort.isBlank()) {
 
-        
-        Sort sorting = Sort.by("createdAt").descending();
+                String[] parts = sort.split(",");
 
-        if (sort != null && !sort.isBlank()) {
-
-            String[] parts = sort.split(",");
-
-            if (parts.length == 2 && parts[1].equalsIgnoreCase("desc")) {
-                sorting = Sort.by(parts[0]).descending();
-            } else {
-                sorting = Sort.by(parts[0]).ascending();
+                if (parts.length == 2 && parts[1].equalsIgnoreCase("desc")) {
+                    sorting = Sort.by(parts[0]).descending();
+                } else {
+                    sorting = Sort.by(parts[0]).ascending();
+                }
             }
-        }
 
-        Pageable pageable = PageRequest.of(page, size, sorting);
-        return productRepository
-            .findBySeller(currentUser, pageable)
-            .map(this::mapToResponse);
-    }
+            Pageable pageable = PageRequest.of(page, size, sorting);
+            return productRepository
+                .findBySeller(currentUser, pageable)
+                .map(this::mapToResponse);
+        }
     
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest request) {
@@ -224,12 +208,7 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setPrice(request.getPrice());
         existingProduct.setStock(request.getStock());
         existingProduct.setCategory(request.getCategory());
-        try {
-            String imageUrl = cloudinaryService.uploadImage(request.getImage());
-            existingProduct.setImageUrl(imageUrl);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload image", e);
-        }
+        existingProduct.setImageUrl(request.getImageUrl());
         existingProduct.setUpdatedAt(LocalDateTime.now());
 
         Product updatedProduct = productRepository.save(existingProduct);

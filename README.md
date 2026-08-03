@@ -46,15 +46,6 @@ The API powers the Alaba Commerce marketplace by providing authentication, selle
 
 ---
 
-## ☁️ Cloudinary Integration
-
-- Secure cloud image storage
-- Automatic image URL generation
-- Images stored externally instead of locally
-- HTTPS image delivery
-
----
-
 ## 🛒 Shopping Cart
 
 - Add items to cart

@@ -1,8 +1,6 @@
 package com.alabacommerce.seller;
 
 import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.alabacommerce.dto.OrderResponse;
