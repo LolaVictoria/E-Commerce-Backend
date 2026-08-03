@@ -1,42 +1,92 @@
-﻿# E-Commerce-Backend - Alaba Commerce API
+# 🛒 Alaba Commerce API
 
-A secure RESTful e-commerce backend built with **Spring Boot**.  
-It provides authentication, product management, and shopping cart functionality using JWT authentication.
+A secure, production-ready RESTful e-commerce backend built with **Spring Boot**.
+
+The API powers the Alaba Commerce marketplace by providing authentication, seller management, product management, shopping cart functionality, and order processing using **JWT Authentication**.
 
 ---
 
-## 🚀 Features
+# ✨ Features
 
-### Authentication
+## 🔐 Authentication
+
 - User registration
 - User login
 - JWT Authentication
 - Password encryption with BCrypt
-
-### Products
-- Create product
-- Update product
-- Delete product
-- Get all products
-- Get product by ID
-- Get seller's products
-- Search products
-- Filter by category
-- Pagination & sorting
-
-### Cart
-- Add item to cart
-- View cart
-- Update cart quantity
-- Remove cart item
-- Clear cart
-
-### Documentation
-- Swagger UI
+- Stateless authentication
+- Role-based authorization (USER & SELLER)
 
 ---
 
-## Tech Stack
+## 👤 Seller Profile
+
+- Create seller profile
+- View seller profile
+- Update seller profile
+- Delete seller profile
+- Automatically upgrade user role from **USER** → **SELLER**
+- Automatically issue a new JWT after role upgrade
+
+---
+
+## 📦 Products
+
+- Create products
+- Update products
+- Delete products
+- Get all products
+- Get product by ID
+- View seller's products
+- Search products
+- Filter products by category
+- Pagination & sorting
+- Product ownership validation
+- Product image upload using **Cloudinary**
+
+---
+
+## ☁️ Cloudinary Integration
+
+- Secure cloud image storage
+- Automatic image URL generation
+- Images stored externally instead of locally
+- HTTPS image delivery
+
+---
+
+## 🛒 Shopping Cart
+
+- Add items to cart
+- View cart
+- Update cart quantity
+- Remove cart items
+- Clear cart
+
+---
+
+## 📋 Orders
+
+### Customer
+
+- Checkout
+- View purchase history
+- View order details
+
+### Seller
+
+- View orders containing seller's products
+- Update order status
+
+---
+
+## 📖 API Documentation
+
+- Swagger UI (OpenAPI)
+
+---
+
+# 🛠 Tech Stack
 
 - Java 21
 - Spring Boot
@@ -47,37 +97,52 @@ It provides authentication, product management, and shopping cart functionality 
 - JWT
 - Maven
 - Swagger (OpenAPI)
+- Cloudinary
+
 ---
 
-## 🔐 Authentication
+# 🔐 Authentication
 
 Protected endpoints require:
 
-```
+```http
 Authorization: Bearer <JWT_TOKEN>
 ```
 
-Obtain the token from:
+Obtain a token from:
 
-```
+```http
 POST /auth/login
 ```
 
 ---
 
-## 📌 API Endpoints
+# 📌 API Endpoints
 
-### Authentication
+## Authentication
 
 | Method | Endpoint |
-|--------|----------|
+|---------|----------|
 | POST | `/auth/register` |
 | POST | `/auth/login` |
 
-### Products
+---
+
+## Seller Profile
 
 | Method | Endpoint |
-|--------|----------|
+|---------|----------|
+| POST | `/seller-profile` |
+| GET | `/seller-profile/me` |
+| PUT | `/seller-profile` |
+| DELETE | `/seller-profile` |
+
+---
+
+## Products
+
+| Method | Endpoint |
+|---------|----------|
 | POST | `/products` |
 | GET | `/products` |
 | GET | `/products/{id}` |
@@ -85,10 +150,12 @@ POST /auth/login
 | DELETE | `/products/{id}` |
 | GET | `/products/my-products` |
 
-### Cart
+---
+
+## Shopping Cart
 
 | Method | Endpoint |
-|--------|----------|
+|---------|----------|
 | POST | `/cart/items` |
 | GET | `/cart` |
 | PUT | `/cart/items/{id}` |
@@ -96,25 +163,36 @@ POST /auth/login
 | DELETE | `/cart` |
 
 ---
-## 🌐 Live Website
 
-The frontend application is live at:
+## Orders
+
+| Method | Endpoint |
+|---------|----------|
+| POST | `/orders/checkout` |
+| GET | `/orders` |
+| GET | `/orders/{id}` |
+| GET | `/orders/seller` |
+| PUT | `/orders/{id}/status` |
+
+---
+
+# 🌐 Live Website
+
+The frontend application is available at:
 
 🔗 **https://alaba-market.vercel.app**
 
-https://alaba-market.vercel.app
 ---
 
-## 📖 Swagger Documentation
+# 📖 Swagger Documentation
 
-After starting the application:
+Explore and test the API:
 
-```
-https://e-commerce-backend-production-2580.up.railway.app/swagger-ui/index.html
-```
+🔗 **https://e-commerce-backend-production-2580.up.railway.app/swagger-ui/index.html**
+
 ---
 
-## ▶ Running the Project
+# ▶ Running the Project
 
 Clone the repository
 
@@ -128,6 +206,12 @@ Navigate into the project
 cd alaba-commerce
 ```
 
+Install dependencies
+
+```bash
+mvn clean install
+```
+
 Run the application
 
 ```bash
@@ -136,16 +220,35 @@ mvn spring-boot:run
 
 ---
 
-## 📬 Postman Collection
+# ⚙️ Environment Variables
 
-The complete Postman collection is included in:
+The following environment variables are required:
 
+```properties
+SPRING_DATASOURCE_URL=
+SPRING_DATASOURCE_USERNAME=
+SPRING_DATASOURCE_PASSWORD=
+
+JWT_SECRET=
+
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+```
+
+---
+
+# 📬 Postman Collection
+
+The Postman collection is included in:
+
+```
 postman/
 └── Alaba-Commerce-API.postman_collection.json
 ```
 
 ---
 
-## 📄 License
+# 📄 License
 
-This project is for learning and portfolio purposes.
+This project was built for learning, portfolio, and demonstration purposes.
