@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/cart")
 @Tag(name = "Cart", description = "Shopping cart management APIs")
-@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('USER', 'SELLER')")
 public class CartController {
 
     private final CartService cartService;

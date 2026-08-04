@@ -19,6 +19,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import com.alabacommerce.dto.ProductRequest;
 import com.alabacommerce.dto.ProductResponse;
+import com.alabacommerce.dto.ProductUpdateRequest;
 import com.alabacommerce.entity.Category;
 import com.alabacommerce.entity.Product;
 import com.alabacommerce.entity.User;
@@ -193,7 +194,7 @@ public class ProductServiceImpl implements ProductService {
         }
     
     @Override
-    public ProductResponse updateProduct(Long id, ProductRequest request) {
+    public ProductResponse updateProduct(Long id, ProductUpdateRequest request) {
 
         Product existingProduct = productRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Product not found"));

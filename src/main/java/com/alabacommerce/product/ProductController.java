@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.alabacommerce.dto.ProductRequest;
 import com.alabacommerce.dto.ProductResponse;
+import com.alabacommerce.dto.ProductUpdateRequest;
 import com.alabacommerce.entity.Category;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,7 +86,7 @@ public class ProductController {
     @Operation(summary = "Update one of my products")
     public ProductResponse updateProduct(   
         @PathVariable Long id,
-            @Valid @ModelAttribute ProductRequest request) {
+            @Valid @ModelAttribute ProductUpdateRequest request) {
         return productService.updateProduct(id, request);
     }
 

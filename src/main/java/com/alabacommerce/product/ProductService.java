@@ -3,6 +3,7 @@ package com.alabacommerce.product;
 import org.springframework.data.domain.Page;
 import com.alabacommerce.dto.ProductRequest;
 import com.alabacommerce.dto.ProductResponse;
+import com.alabacommerce.dto.ProductUpdateRequest;
 import com.alabacommerce.entity.Category;
 
 public interface ProductService {
@@ -17,6 +18,6 @@ public interface ProductService {
     );  
     Page<ProductResponse> getAllSellersProducts(Category category, int page, int size, String sort, String keyword);
     ProductResponse getProductById(Long id);
-    ProductResponse updateProduct(Long id, ProductRequest request);
+    ProductResponse updateProduct(Long id, ProductUpdateRequest request);
     void deleteProduct(Long id);
 }
