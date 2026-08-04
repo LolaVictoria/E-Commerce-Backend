@@ -88,7 +88,6 @@ The API powers the Alaba Commerce marketplace by providing authentication, selle
 - JWT
 - Maven
 - Swagger (OpenAPI)
-- Cloudinary
 
 ---
 
@@ -108,64 +107,6 @@ POST /auth/login
 
 ---
 
-# 📌 API Endpoints
-
-## Authentication
-
-| Method | Endpoint |
-|---------|----------|
-| POST | `/auth/register` |
-| POST | `/auth/login` |
-
----
-
-## Seller Profile
-
-| Method | Endpoint |
-|---------|----------|
-| POST | `/seller-profile` |
-| GET | `/seller-profile/me` |
-| PUT | `/seller-profile` |
-| DELETE | `/seller-profile` |
-
----
-
-## Products
-
-| Method | Endpoint |
-|---------|----------|
-| POST | `/products` |
-| GET | `/products` |
-| GET | `/products/{id}` |
-| PUT | `/products/{id}` |
-| DELETE | `/products/{id}` |
-| GET | `/products/my-products` |
-
----
-
-## Shopping Cart
-
-| Method | Endpoint |
-|---------|----------|
-| POST | `/cart/items` |
-| GET | `/cart` |
-| PUT | `/cart/items/{id}` |
-| DELETE | `/cart/items/{id}` |
-| DELETE | `/cart` |
-
----
-
-## Orders
-
-| Method | Endpoint |
-|---------|----------|
-| POST | `/orders/checkout` |
-| GET | `/orders` |
-| GET | `/orders/{id}` |
-| GET | `/orders/seller` |
-| PUT | `/orders/{id}/status` |
-
----
 
 # 🌐 Live Website
 
