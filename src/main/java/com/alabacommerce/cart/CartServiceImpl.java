@@ -76,6 +76,21 @@ public class CartServiceImpl implements CartService {
         return response;
     }
 
+    private Cart getOrCreateCart(User user) {
+
+    return cartRepository.findByUser(user)
+            .orElseGet(() -> {
+
+                Cart cart = new Cart();
+
+                cart.setUser(user);
+                cart.setCreatedAt(LocalDateTime.now());
+                cart.setUpdatedAt(LocalDateTime.now());
+
+                return cartRepository.save(cart);
+            });
+}
+
     private CartItemResponse mapCartItemResponse(CartItem item) {
 
         CartItemResponse response = new CartItemResponse();
@@ -106,9 +121,7 @@ public class CartServiceImpl implements CartService {
             .orElseThrow(() ->
                     new ResourceNotFoundException("Product not found"));
         
-        Cart cart = cartRepository.findByUser(user)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-           
+        Cart cart = getOrCreateCart(user);
         Optional<CartItem> existingItem =
             cartItemRepository.findByCartAndProduct(cart, product);
 
@@ -140,10 +153,7 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.save(item);
         }
 
-        Cart updatedCart = cartRepository.findByUser(user)
-        .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-
-        return mapCartResponse(updatedCart);
+        return mapCartResponse(cart);
     }
 
     
@@ -152,9 +162,7 @@ public class CartServiceImpl implements CartService {
     public CartResponse getCart() {
         User user = currentUserService.getCurrentUser();
 
-        Cart cart = cartRepository.findByUser(user)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-
+        Cart cart = getOrCreateCart(user);
         CartResponse response = mapCartResponse(cart);
 
         return response;
