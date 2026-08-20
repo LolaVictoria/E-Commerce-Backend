@@ -38,3 +38,5 @@ target/
 .vscode/
 *.log
 .env
+.vercel
+.env*
